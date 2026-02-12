@@ -1,0 +1,38 @@
+name: Generate Release Assets
+
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          pip install -r scripts/requirements.txt || true
+
+      - name: Generate Formats
+        run: python scripts/generate_formats.py
+
+      - name: Generate Checksums
+        run: python scripts/generate_checksums.py
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            data/words.json
+            data/words.csv
+            data/words.lst
+            data/checksums.txt

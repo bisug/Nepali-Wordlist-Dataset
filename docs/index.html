@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="ne">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>नेपाली शब्दकोश खोज - Nepali Wordlist Search</title>
+    <style>
+        :root {
+            --bg: #f8fafc;
+            --container-bg: #ffffff;
+            --text: #1e293b;
+            --primary: #2563eb;
+            --secondary: #64748b;
+            --item-bg: #f1f5f9;
+            --border: #e2e8f0;
+            --input-bg: #ffffff;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+
+        [data-theme="dark"] {
+            --bg: #0f172a;
+            --container-bg: #1e293b;
+            --text: #f1f5f9;
+            --primary: #3b82f6;
+            --secondary: #94a3b8;
+            --item-bg: #334155;
+            --border: #334155;
+            --input-bg: #1e293b;
+            --shadow: 0 10px 15px -3px rgb(0 0 0 / 0.3);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 1.5rem;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .container {
+            background: var(--container-bg);
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            transition: background-color 0.3s, box-shadow 0.3s;
+            min-height: 90vh;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 2rem;
+            gap: 1rem;
+        }
+
+        .controls {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 0.5rem;
+        }
+
+        h1 { margin: 0; color: var(--primary); font-size: 1.6rem; line-height: 1.2; }
+        .subtitle { margin: 0.25rem 0 0 0; color: var(--secondary); font-size: 0.9rem; }
+
+        button {
+            background: var(--item-bg);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 0.6rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        button:hover { background: var(--border); }
+        button.active { background: var(--primary); color: white; border-color: var(--primary); }
+
+        .search-container {
+            position: sticky;
+            top: 0;
+            background: var(--container-bg);
+            padding: 1rem 0;
+            z-index: 10;
+            margin: 0 -0.5rem;
+            padding: 1rem 0.5rem;
+        }
+
+        input {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            font-size: 1.1rem;
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            box-sizing: border-box;
+            outline: none;
+            background-color: var(--input-bg);
+            color: var(--text);
+            transition: border-color 0.2s, background-color 0.3s;
+            appearance: none;
+            -webkit-appearance: none;
+        }
+        input:focus { border-color: var(--primary); }
+
+        .stats { margin: 0.75rem 0; font-size: 0.85rem; color: var(--secondary); }
+        .results {
+            list-style: none;
+            padding: 0;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+            gap: 0.5rem;
+        }
+        .results li {
+            padding: 0.6rem 0.4rem;
+            background: var(--item-bg);
+            border-radius: 6px;
+            font-size: 1rem;
+            text-align: center;
+            transition: background-color 0.3s;
+            word-break: break-word;
+        }
+        .loading { text-align: center; font-style: italic; margin: 2rem 0; color: var(--secondary); }
+        
+
+        .tooltip {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--text);
+            color: var(--bg);
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+            z-index: 100;
+        }
+        .tooltip.show { opacity: 1; }
+
+        @media (max-width: 480px) {
+            body { padding: 0.75rem; }
+            .container { padding: 1rem; }
+            .header { align-items: stretch; margin-bottom: 1.5rem; }
+            .controls { flex-direction: row; justify-content: space-between; align-items: center; width: 100%; }
+            h1 { font-size: 1.4rem; }
+            .results { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <div>
+            <h1 id="ui-title">नेपाली शब्दकोश खोज</h1>
+            <p class="subtitle" id="ui-subtitle">Nepali Wordlist Search</p>
+        </div>
+        <div class="controls">
+            <button id="themeToggle" onclick="toggleTheme()">🌓 Theme</button>
+            <div style="display: flex; gap: 2px;">
+                <button id="langNE" onclick="setLang('ne')" class="active">नेपाली</button>
+                <button id="langEN" onclick="setLang('en')">EN</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="search-container">
+        <input type="text" id="searchInput" placeholder="शब्द खोज्नुहोस्..." disabled>
+        <div class="stats" id="stats">डाटा लोड हुँदैछ...</div>
+    </div>
+
+    <div id="loading" class="loading">लोड हुँदैछ...</div>
+    <ul id="results" class="results"></ul>
+    <div id="tooltip" class="tooltip">Copied!</div>
+</div>
+
+<script>
+    let words = [];
+    let currentLang = 'ne';
+    
+    const translations = {
+        ne: {
+            title: "नेपाली शब्दकोश खोज",
+            subtitle: "नेपाली शब्दसूची खोज्नुहोस्",
+            placeholder: "शब्द खोज्नुहोस्...",
+            loading: "१२३k शब्दहरू लोड हुँदैछन्...",
+            total: "कुल शब्दहरू: ",
+            failed: "डाटा लोड गर्न सकिएन।",
+            wait: "कृपया केही समय पर्खनुहोस्।",
+            copied: "कपी गरियो: ",
+            noResults: "कुनै नतिजा भेटिएन।"
+        },
+        en: {
+            title: "Nepali Word Search",
+            subtitle: "Search the Nepali wordlist",
+            placeholder: "Search for a word...",
+            loading: "Loading 123k words...",
+            total: "Total words: ",
+            failed: "Failed to load data.",
+            wait: "Please wait a moment.",
+            copied: "Copied: ",
+            noResults: "No results found."
+        }
+    };
+
+    const searchInput = document.getElementById('searchInput');
+    const resultsList = document.getElementById('results');
+    const stats = document.getElementById('stats');
+    const loading = document.getElementById('loading');
+    const tooltip = document.getElementById('tooltip');
+
+    function toggleTheme() {
+        const currentTheme = document.documentElement.getAttribute('data-theme');
+        const nextTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', nextTheme);
+        localStorage.setItem('theme', nextTheme);
+    }
+
+    function setLang(lang) {
+        currentLang = lang;
+        document.getElementById('ui-title').innerText = translations[lang].title;
+        document.getElementById('ui-subtitle').innerText = translations[lang].subtitle;
+        searchInput.placeholder = translations[lang].placeholder;
+        
+        document.getElementById('langEN').classList.toggle('active', lang === 'en');
+        document.getElementById('langNE').classList.toggle('active', lang === 'ne');
+        
+        updateStats();
+
+        if (searchInput.value) {
+            filterWords(searchInput.value);
+        }
+    }
+
+    function updateStats() {
+        if (words.length > 0) {
+            stats.innerText = `${translations[currentLang].total} ${words.length.toLocaleString()}`;
+        } else {
+            stats.innerText = translations[currentLang].loading;
+        }
+    }
+
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+
+    fetch('../data/words.json')
+        .then(response => response.json())
+        .then(data => {
+            words = data;
+            loading.style.display = 'none';
+            searchInput.disabled = false;
+            searchInput.focus();
+            updateStats();
+        })
+        .catch(err => {
+            stats.innerText = translations[currentLang].failed;
+            console.error(err);
+        });
+
+    searchInput.addEventListener('input', (e) => {
+        filterWords(e.target.value.trim());
+    });
+
+    function filterWords(query) {
+        resultsList.innerHTML = '';
+        
+        if (query.length < 1) {
+            return;
+        }
+        
+        const matches = [];
+        for (let i = 0; i < words.length; i++) {
+            if (words[i].startsWith(query)) {
+                matches.push(words[i]);
+                if (matches.length >= 50) break;
+            }
+        }
+        
+        if (matches.length === 0) {
+            resultsList.innerHTML = `<li style="grid-column: 1 / -1; background: transparent;">${translations[currentLang].noResults}</li>`;
+        } else {
+            displayResults(matches);
+        }
+    }
+
+    function displayResults(matches) {
+        const fragment = document.createDocumentFragment();
+        matches.forEach(word => {
+            const li = document.createElement('li');
+            li.textContent = word;
+            li.onclick = () => copyToClipboard(word);
+            li.style.cursor = 'pointer';
+            li.title = "Click to copy";
+            fragment.appendChild(li);
+        });
+        resultsList.appendChild(fragment);
+    }
+
+    function copyToClipboard(text) {
+        navigator.clipboard.writeText(text).then(() => {
+            showTooltip(`${translations[currentLang].copied} ${text}`);
+        }).catch(err => {
+            console.error('Failed to copy: ', err);
+        });
+    }
+
+    function showTooltip(message) {
+        tooltip.textContent = message;
+        tooltip.classList.add('show');
+        setTimeout(() => {
+            tooltip.classList.remove('show');
+        }, 2000);
+    }
+</script>
+
+</body>
+</html>

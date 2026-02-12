@@ -1,0 +1,14 @@
+cff-version: 1.2.0
+message: "If you use this dataset in your research, please cite it as follows."
+authors:
+  - family-names: "Upadhyay"
+    given-names: "Bishu"
+title: "Nepali Wordlist Dataset"
+version: 1.0.0
+date-released: 2026-02-12
+url: "https://github.com/bisug/Nepali-Wordlist-Dataset"
+identifiers:
+  - type: doi
+    value: "10.5281/zenodo.placeholder"
+license: CC0-1.0
+abstract: "A comprehensive dataset of 123,363 unique Nepali words derived from the Nepali Brihat Sabdakosh."

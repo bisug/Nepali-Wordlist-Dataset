@@ -1,0 +1,20 @@
+{
+  "title": "Nepali Wordlist Dataset",
+  "description": "A comprehensive, sorted dataset of 123,363 Nepali words for NLP and linguistic research.",
+  "creators": [
+    {
+      "name": "Tamang, Bisu"
+    }
+  ],
+  "access_right": "open",
+  "license": "CC0-1.0",
+  "keywords": [
+    "nepali",
+    "wordlist",
+    "dataset",
+    "nlp",
+    "linguistics",
+    "dictionary"
+  ],
+  "upload_type": "dataset"
+}

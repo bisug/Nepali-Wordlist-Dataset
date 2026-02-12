@@ -1,0 +1,32 @@
+name: Validate Wordlist
+
+on:
+  push:
+    paths:
+      - "words.txt"
+      - "scripts/**"
+  pull_request:
+    paths:
+      - "words.txt"
+      - "scripts/**"
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          pip install -r scripts/requirements.txt || true
+
+      - name: Validate Wordlist
+        run: python scripts/validate_wordlist.py
+
+      - name: Test Sort Order
+        run: python scripts/test_sort_order.py
