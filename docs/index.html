@@ -249,8 +249,8 @@
 
     const savedTheme = localStorage.getItem('theme') || 'light';
     document.documentElement.setAttribute('data-theme', savedTheme);
-
-    fetch('../data/words.json')
+    // Fetch the JSON wordlist
+    fetch('https://raw.githubusercontent.com/bisug/Nepali-Wordlist-Dataset/main/data/words.json')
         .then(response => response.json())
         .then(data => {
             words = data;

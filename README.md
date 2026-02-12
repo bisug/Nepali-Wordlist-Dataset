@@ -13,22 +13,22 @@ A comprehensive, curated dataset of **123,363 unique Nepali words** in UTF-8 enc
 
 ---
 
-## 📋 Table of Contents
+## Table of Contents
 
-- [Statistics](#-statistics)
-- [Repository Structure](#-repository-structure)
-- [Data Curation](#-data-curation)
-- [How to Use](#-how-to-use)
+- [Statistics](#statistics)
+- [Repository Structure](#repository-structure)
+- [Data Curation](#data-curation)
+- [How to Use](#how-to-use)
   - [Remote Fetching (Raw)](#remote-fetching-raw)
   - [Code Implementation Examples](#code-implementation-examples)
-- [Data Integrity & Validation](#-data-integrity--validation)
-- [Contributing](#-contributing)
-- [Citation](#-citation)
-- [License](#-license)
+- [Data Integrity & Validation](#data-integrity--validation)
+- [Contributing](#contributing)
+- [Citation](#citation)
+- [License](#license)
 
 ---
 
-## 📊 Statistics
+## Statistics
 
 - **Total Unique Words:** 123,363
 - **Primary Encoding:** UTF-8 (NFC Normalization)
@@ -37,7 +37,7 @@ A comprehensive, curated dataset of **123,363 unique Nepali words** in UTF-8 enc
 
 ---
 
-## 📂 Repository Structure
+## Repository Structure
 
 - `words.txt`: The definitive plain-text wordlist.
 - `data/words.json`: Wordlist as a JSON array for web/app integration.
@@ -50,7 +50,7 @@ A comprehensive, curated dataset of **123,363 unique Nepali words** in UTF-8 enc
 
 ---
 
-## 🛠 Data Curation
+## Data Curation
 
 The words were extracted from a structured JSON dump of the _Nepali Brihat Sabdakosh_.
 
@@ -91,7 +91,7 @@ The words were extracted from a structured JSON dump of the _Nepali Brihat Sabda
 
 ---
 
-## 🚀 How to Use
+## How to Use
 
 ### Remote Fetching (Raw)
 
@@ -102,7 +102,7 @@ You can fetch the data directly into your CI/CD pipelines or scripts:
 
 ### Code Implementation Examples
 
-#### 🐍 Python
+#### Python
 
 ```python
 import requests
@@ -111,7 +111,7 @@ words = requests.get(url).text.splitlines()
 print(f"Loaded {len(words)} words.")
 ```
 
-#### 🟨 JavaScript (Node.js)
+#### JavaScript (Node.js)
 
 ```javascript
 const axios = require("axios");
@@ -122,7 +122,7 @@ axios
   .then((res) => console.log(`Loaded ${res.data.split("\n").length} words.`));
 ```
 
-#### 🐹 Go
+#### Go
 
 ```go
 resp, _ := http.Get("https://raw.githubusercontent.com/bisug/Nepali-Wordlist-Dataset/main/words.txt")
@@ -132,7 +132,7 @@ for scanner.Scan() { /* process word */ }
 
 ---
 
-## 🛡 Data Integrity & Validation
+## Data Integrity & Validation
 
 Integrity is guaranteed via SHA-256 checksums. To verify your local files:
 
@@ -148,13 +148,13 @@ python scripts/validate_wordlist.py
 
 ---
 
-## 🤝 Contributing
+## Contributing
 
 Contributions are welcome! Please see [.github/CONTRIBUTING.md](.github/CONTRIBUTING.md) for guidelines on how to suggest new words or improvements.
 
 ---
 
-## 📝 Citation
+## Citation
 
 If you use this dataset in a research paper or project, please cite it using:
 
@@ -171,6 +171,10 @@ If you use this dataset in a research paper or project, please cite it using:
 
 ---
 
-## 📜 License
+## License
 
 This work is dedicated to the public domain under the **CC0 1.0 Universal** license. See [LICENSE](LICENSE) for details.
+
+---
+
+**Made by Bisu G using Google Antigravity**
